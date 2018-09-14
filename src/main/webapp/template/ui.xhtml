@@ -7,12 +7,14 @@
 <f:view locale="en">
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="app-style.css"  />
         <ui:insert name="header">
             <title></title>
         </ui:insert>
     </h:head>
 
     <h:body>
+        <f:loadBundle basename="com.jonatasmelo.messages" var="msg"/>
         <ui:insert name="body">
         </ui:insert>
         <ui:insert name="script">

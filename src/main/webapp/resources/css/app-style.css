@@ -1,0 +1,30 @@
+html, body {
+    height: 100%;
+}
+
+.app-container {
+    width: 1024px;
+    height: 100%;
+    margin: auto;
+}
+
+.app-container-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pnlLogin {
+    width: 600px;
+}
+
+.pnlError {
+    width: 350px;
+}
+
+.pnlError .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

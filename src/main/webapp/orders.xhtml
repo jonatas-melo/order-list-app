@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="template/ui.xhtml">
+    <ui:define name="header">
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{loginPage.validateLogin}" />
+        </f:metadata>
+    </ui:define>
+    <ui:define name="body">
+        <p:outputPanel styleClass="app-container">
+            <h:form id="form" onkeypress="if (event.keyCode == 13) { return false; }">
+                <p:toolbar id="menu">
+                    <f:facet name="right">
+                        <p:commandButton action="#{loginPage.logout}" value="Logout" icon="ui-icon-closethick"/>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:sticky target="menu" />
+                <p:spacer height="20px" />
+
+                <p:dataTable id="customers" var="customer" value="#{ordersPage.customerList}" selectionMode="single" selection="#{ordersPage.selectedCustomer}" rowKey="#{customer.id}" widgetVar="wdgCustomerList"
+                             paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             emptyMessage="No customers found with given filter" filteredValue="#{ordersPage.filteredCustomers}">
+
+                    <f:facet name="header">
+                        <h:outputText value="Customers" />
+                    </f:facet>
+
+                    <p:column headerText="Id" filterBy="#{customer.id}" filterMatchMode="exact">
+                        <h:outputText value="#{customer.id}" />
+                    </p:column>
+
+                    <p:column headerText="Name" filterBy="#{customer.name}" filterMatchMode="contains">
+                        <h:outputText value="#{customer.name}" />
+                    </p:column>
+
+                    <p:column headerText="Phone" filterBy="#{customer.phone}" filterMatchMode="contains">
+                        <h:outputText value="#{customer.phone}" />
+                    </p:column>
+
+                    <p:column headerText="Credit Limit" filterBy="#{customer.creditLimit}" filterMatchMode="gte">
+                        <f:facet name="filter">
+                            <p:spinner onchange="PF('wdgCustomerList').filter()" stepFactor="0.5">
+                                <f:converter converterId="javax.faces.BigDecimal" />
+                            </p:spinner>
+                        </f:facet>
+                        <h:outputText value="#{customer.creditLimit}">
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <p:commandButton actionListener="#{ordersPage.fillOrderList}" process="customers" update=":form:customerOrders" icon="ui-icon-search" value="View" oncomplete="PF('ordersDialog').show()" />
+                    </f:facet>
+                </p:dataTable>
+
+                <p:dialog header="Customer Orders" widgetVar="ordersDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="1024px">
+                    <p:outputPanel id="customerOrders" style="text-align:center;">
+                        <p:dataTable id="customerOrderList" var="order" value="#{ordersPage.customerOrderList}" rowKey="#{order.number}"
+                                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                            <f:facet name="header">
+                                <h:outputText value="Customer's Orders" />
+                            </f:facet>
+
+                            <p:column style="width:16px">
+                                <p:rowToggler />
+                            </p:column>
+
+                            <p:column headerText="Number" sortBy="#{order.number}">
+                                <h:outputText value="#{order.number}" />
+                            </p:column>
+
+                            <p:column headerText="Date" sortBy="#{order.date}">
+                                <h:outputText value="#{order.date}" converter="localDataTimeFacesConverter" />
+                            </p:column>
+
+                            <p:column headerText="Required Date" sortBy="#{order.requiredDate}">
+                                <h:outputText value="#{order.requiredDate}" converter="localDataTimeFacesConverter" />
+                            </p:column>
+
+                            <p:column headerText="Shipped Date" sortBy="#{order.shippedDate}">
+                                <h:outputText value="#{order.shippedDate}" converter="localDataTimeFacesConverter" />
+                            </p:column>
+
+                            <p:rowExpansion>
+                                <p:dataTable id="productList" var="product" value="#{order.detailList}" rowKey="#{product.productCode}" scrollable="true" scrollHeight="150">
+
+                                    <f:facet name="header">
+                                        <h:outputText value="Order Detail" />
+                                    </f:facet>
+
+                                    <p:column headerText="Product Code" sortBy="#{product.productCode}">
+                                        <h:outputText value="#{product.productCode}" />
+                                    </p:column>
+
+                                    <p:column headerText="Product Name" sortBy="#{product.productName}">
+                                        <h:outputText value="#{product.productName}" />
+                                    </p:column>
+
+                                    <p:column headerText="Quantity Ordered" sortBy="#{product.quantityOrdered}">
+                                        <h:outputText value="#{product.quantityOrdered}" />
+                                    </p:column>
+
+                                    <p:column headerText="Unit Price" sortBy="#{product.priceEach}">
+                                        <h:outputText value="#{product.priceEach}">
+                                            <f:convertNumber currencySymbol="$" type="currency"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>

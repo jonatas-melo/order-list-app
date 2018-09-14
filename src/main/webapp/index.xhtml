@@ -7,12 +7,25 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="template/ui.xhtml">
     <ui:define name="body">
-        <h3>Welcome to JSF Lab</h3>
-        <h4>Pure JSF</h4>
-        <p>#{helloWorld.message}</p>
-        <h:commandButton value="Click" onclick="alert('click')" /><br/>
-        <h4>Primefaces</h4>
-        <p:spinner />
-        <hr />
+        <p:outputPanel styleClass="app-container app-container-flex">
+        <h:form >
+            <p:panel styleClass="pnlLogin" header="Login">
+                <p:messages globalOnly="true" closable="true" showDetail="true">
+                    <p:autoUpdate />
+                </p:messages>
+                <h:panelGrid columns="3">
+                    <h:outputLabel for="username" value="Username:" />
+                    <p:inputText id="username" value="#{loginPage.username}" required="true" label="Username" requiredMessage="#{msg['field.required']}" autocomplete="off" />
+                    <p:message for="username" />
+
+                    <h:outputLabel for="password" value="Password:" />
+                    <p:inputText id="password" type="password" value="#{loginPage.password}" required="true" label="Password" requiredMessage="#{msg['field.required']}" autocomplete="off" />
+                    <p:message for="password" />
+
+                    <p:commandButton value="Login" action="#{loginPage.login}" ajax="false" icon="ui-icon-check" validateClient="true" />
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+        </p:outputPanel>
     </ui:define>
 </ui:composition>
